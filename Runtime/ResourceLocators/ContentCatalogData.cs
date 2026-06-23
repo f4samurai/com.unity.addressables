@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using UnityEngine.AddressableAssets.Utility;
+// f4 add CustomのABRequestOptionの定義を移動
 using UnityEngine.ResourceManagement;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.ResourceManagement.ResourceProviders;

@@ -8,3 +8,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("PerformanceTests.Editor")]
 [assembly: InternalsVisibleTo("Unity.Localization.Editor")]
 [assembly: InternalsVisibleTo("Unity.Addressables.Android.Editor")]
+[assembly: InternalsVisibleTo("F4samurai.Addressables.Editor")]

@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Unity.Addressables.Tests")]
 [assembly: InternalsVisibleTo("Unity.Addressables")]
 [assembly: InternalsVisibleTo("Unity.Addressables.Android")]
+[assembly: InternalsVisibleTo("F4samurai.Addressables")]
 #if UNITY_EDITOR
 [assembly: InternalsVisibleTo("Unity.Addressables.Editor")]
 #endif

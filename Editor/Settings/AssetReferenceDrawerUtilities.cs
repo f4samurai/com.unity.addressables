@@ -21,6 +21,10 @@ namespace UnityEditor.AddressableAssets.Settings
     {
         internal const string noAssetString = "None (Addressable Asset)";
         internal const string noAssetTypeStringformat = "None (Addressable {0})";
+        // ↓ f4 modify 参照先AssetがMissingの場合を区別する
+        internal const string missingAssetString = "Missing";
+        internal const string missingAssetTypeStringformat = "Missing ({0})";
+        // ↑ f4 modify
 
         static internal bool ValidateAsset(AssetReference assetRefObject, List<AssetReferenceUIRestrictionSurrogate> restrictions, Object obj)
         {
@@ -339,7 +343,14 @@ namespace UnityEditor.AddressableAssets.Settings
             var currentRef =
                 property.GetActualObjectForSerializedProperty<AssetReference>(propertyField, ref labelText);
 
-            string nameToUse = currentRef.editorAsset != null ? currentRef.editorAsset.name : ConstructNoAssetLabel(propertyField.FieldType);
+            // ↓ f4 modify 参照先AssetがMissingの場合を区別する
+            var editorAsset = currentRef.editorAsset;
+            string nameToUse = editorAsset != null ? currentRef.editorAsset.name : ConstructNoAssetLabel(propertyField.FieldType);
+            if (editorAsset == null && !string.IsNullOrEmpty(currentRef.AssetGUID))
+            {
+                nameToUse = ConstructMissingAssetLabel(propertyField.FieldType);
+            }
+            // ↑ f4 modify
 
             if (property.serializedObject.targetObjects.Length > 1)
             {
@@ -376,6 +387,20 @@ namespace UnityEditor.AddressableAssets.Settings
         }
 
         static string FormatNoAssetString(string n) => string.IsNullOrEmpty(n) ? noAssetString : string.Format(noAssetTypeStringformat, n);
+
+        // ↓ f4 modify 参照先AssetがMissingの場合を区別する
+        internal static string ConstructMissingAssetLabel(Type t)
+        {
+            if (t == null || t == typeof(AssetReference))
+                return FormatMissingAssetString(string.Empty);
+            t = GetGenericType(t);
+            if (t == null || t == typeof(AssetReference))
+                return FormatMissingAssetString(string.Empty);
+            return FormatMissingAssetString(t.Name);
+        }
+
+        static string FormatMissingAssetString(string n) => string.IsNullOrEmpty(n) ? missingAssetString : string.Format(missingAssetTypeStringformat, n);
+        // ↑ f4 modify
 
         private static Type GetGenericType(Type t)
         {

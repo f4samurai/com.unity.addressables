@@ -19,7 +19,10 @@ using UnityEngine.SceneManagement;
 
 namespace UnityEngine.AddressableAssets
 {
-    internal class AddressablesImpl : IEqualityComparer<IResourceLocation>
+    // ↓ f4 modify
+    // internal class AddressablesImpl : IEqualityComparer<IResourceLocation>
+    internal partial class AddressablesImpl : IEqualityComparer<IResourceLocation>
+        // ↑ f4 modify
     {
         ResourceManager m_ResourceManager;
         IInstanceProvider m_InstanceProvider;
@@ -104,6 +107,13 @@ namespace UnityEngine.AddressableAssets
         {
             get { return ResourceManager.WebRequestOverride; }
             set { ResourceManager.WebRequestOverride = value; }
+        }
+
+        // f4 add
+        public Action<UnityWebRequest> OnWebRequestComplete
+        {
+            get { return ResourceManager.OnWebRequestComplete; }
+            set { ResourceManager.OnWebRequestComplete = value; }
         }
 
         public AsyncOperationHandle ChainOperation
@@ -830,6 +840,24 @@ namespace UnityEngine.AddressableAssets
             m_ResourceManager.Release(handle);
         }
 
+        // f4 add SceneInstance専用UnloadSceneOptions指定できるバージョンを追加
+        public void Release(AsyncOperationHandle<SceneInstance> handle, UnloadSceneOptions unloadSceneOptions)
+        {
+            SceneInstance sceneInstance = (SceneInstance)Convert.ChangeType(handle.Result, typeof(SceneInstance));
+            if (sceneInstance.Scene.isLoaded && handle.ReferenceCount == 1)
+            {
+                if (SceneOperationCount == 1 && m_SceneInstances.First().Equals(handle))
+                    m_SceneInstances.Clear();
+                UnloadSceneAsync(handle, unloadSceneOptions, true);
+            }
+            else if (!sceneInstance.Scene.isLoaded && handle.ReferenceCount == 2 && !handle.UnloadSceneOpExcludeReleaseCallback)
+            {
+                AutoReleaseHandleOnCompletion(handle, unloadSceneOptions);
+            }
+
+            m_ResourceManager.Release(handle);
+        }
+
         public void Release(AsyncOperationHandle handle)
         {
             m_ResourceManager.Release(handle);
@@ -1130,6 +1158,12 @@ namespace UnityEngine.AddressableAssets
         internal void AutoReleaseHandleOnCompletion<TObject>(AsyncOperationHandle<TObject> handle)
         {
             handle.Completed += op => Release(op);
+        }
+
+        // f4 add SceneInstance専用UnloadSceneOptions指定できるバージョンを追加
+        internal void AutoReleaseHandleOnCompletion(AsyncOperationHandle<SceneInstance> handle, UnloadSceneOptions unloadSceneOptions)
+        {
+            handle.Completed += op => Release(op, unloadSceneOptions);
         }
 
         internal void AutoReleaseHandleOnCompletion<TObject>(AsyncOperationHandle<TObject> handle, bool unloadSceneOpExcludeReleaseCallback)

@@ -228,8 +228,21 @@ namespace UnityEditor.AddressableAssets.GUI
             else
             {
                 UnityEngine.GUI.SetNextControlName(controlName);
+                // ↓ f4 modify 参照先AssetがMissingの場合を区別する
+                Color originalBackgroundColor = Color.clear;
+                bool isMissing = nameToUse.Contains("Missing");
+                if (isMissing)
+                {
+                    originalBackgroundColor = UnityEngine.GUI.backgroundColor;
+                    UnityEngine.GUI.backgroundColor = Color.red;
+                }
                 if (EditorGUI.DropdownButton(assetDropDownRect, new GUIContent(nameToUse), FocusType.Keyboard, EditorStyles.objectField))
                     UnityEngine.GUI.FocusControl(controlName);
+                if (isMissing)
+                {
+                    UnityEngine.GUI.backgroundColor = originalBackgroundColor;
+                }
+                // ↑ f4 modify
             }
 
             DrawCaret(pickerRect);

@@ -434,7 +434,10 @@ namespace UnityEngine.AddressableAssets
     /// <summary>
     /// Entry point for Addressable API, this provides a simpler interface than using ResourceManager directly as it assumes string address type.
     /// </summary>
-    public static class Addressables
+    // ↓ f4 modify
+    // public static class Addressables
+    public static partial class Addressables 
+    // ↑ f4 modify
     {
         internal static bool reinitializeAddressables = true;
         internal static AddressablesImpl m_AddressablesInstance = new AddressablesImpl(new LRUCacheAllocationStrategy(1000, 1000, 100, 10));
@@ -526,6 +529,13 @@ namespace UnityEngine.AddressableAssets
         {
             get { return m_Addressables.WebRequestOverride; }
             set { m_Addressables.WebRequestOverride = value; }
+        }
+
+        // f4 add
+        public static Action<UnityWebRequest> OnWebRequestComplete
+        {
+            get { return m_Addressables.OnWebRequestComplete; }
+            set { m_Addressables.OnWebRequestComplete = value; }
         }
 
         /// <summary>
@@ -1470,6 +1480,12 @@ namespace UnityEngine.AddressableAssets
         public static void Release<TObject>(AsyncOperationHandle<TObject> handle)
         {
             m_Addressables.Release(handle);
+        }
+
+        // f4 add SceneInstance専用UnloadSceneOptions指定できるバージョンを追加
+        public static void Release(AsyncOperationHandle<SceneInstance> handle, UnloadSceneOptions options)
+        {
+            m_Addressables.Release(handle, options);
         }
 
         /// <summary>

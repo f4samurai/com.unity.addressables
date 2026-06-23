@@ -116,10 +116,22 @@ namespace UnityEngine.ResourceManagement.ResourceProviders
                 if (webOp != null)
                 {
                     var webReq = webOp.webRequest;
+
+                    // ↓ f4 modify
                     if (!UnityWebRequestUtilities.RequestHasErrors(webReq, out UnityWebRequestResult uwrResult))
+                    {
                         textResult = webReq.downloadHandler.text;
+                        m_PI.ResourceManager.OnWebRequestComplete?.Invoke(webReq);
+                    }
                     else
+                    {
                         exception = new RemoteProviderException($"{nameof(TextDataProvider)} : unable to load from url : {webReq.url}", m_PI.Location, uwrResult);
+                    }
+                    // if (!UnityWebRequestUtilities.RequestHasErrors(webReq, out UnityWebRequestResult uwrResult))
+                    //     textResult = webReq.downloadHandler.text;
+                    // else
+                    //     exception = new RemoteProviderException($"{nameof(TextDataProvider)} : unable to load from url : {webReq.url}", m_PI.Location, uwrResult);
+                    // ↑ f4 modify
                     webReq.Dispose();
                 }
                 else

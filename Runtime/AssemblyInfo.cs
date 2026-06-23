@@ -10,3 +10,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Unity.Addressables.Tests")]
 [assembly: InternalsVisibleTo("Unity.Addressables.Samples.Tests")]
 [assembly: InternalsVisibleTo("Unity.Addressables.Android")]
+[assembly: InternalsVisibleTo("F4samurai.Addressables.Editor")]

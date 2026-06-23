@@ -425,6 +425,9 @@ namespace UnityEditor.AddressableAssets.Settings
                 foreach (var e in entries)
                     m_SerializeEntries.Add(e);
             }
+
+            // f4 add Addressableの処理そのままだとシリアライズ時に順番が不定になってしまうので、guidの昇順でソートしてシリアライズする
+            m_SerializeEntries.Sort((e1, e2) => e1.guid.CompareTo(e2.guid));
         }
 
         /// <summary>

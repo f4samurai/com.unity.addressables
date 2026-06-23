@@ -13,7 +13,10 @@ namespace UnityEngine.ResourceManagement
     /// <summary>
     /// Entry point for ResourceManager API
     /// </summary>
-    public class ResourceManager : IDisposable
+    // ↓ f4 modify
+    // public class ResourceManager : IDisposable
+    public partial class ResourceManager : IDisposable
+    // ↑ f4 modify
     {
         /// <summary>
         /// Options for event types that will be sent by the ResourceManager
@@ -162,6 +165,9 @@ namespace UnityEngine.ResourceManagement
         /// </remarks>
         /// <seealso href="xref:addressables-api-transform-internal-id#webrequest-override">Transforming resource URLs</seealso>
         public Action<UnityWebRequest> WebRequestOverride { get; set; }
+
+        // f4 add
+        public Action<UnityWebRequest> OnWebRequestComplete { get; set; }
 
         internal bool CallbackHooksEnabled = true; // tests might need to disable the callback hooks to manually pump updating
 
