@@ -72,7 +72,7 @@ namespace UnityEngine.AddressableAssets.ResourceLocators
     /// Container for ContentCatalogEntries.
     /// </summary>
     [Serializable]
-    public class ContentCatalogData
+    public partial class ContentCatalogData
     {
         //used to verify that this is a valid catalog data file
         static int kMagic = nameof(ContentCatalogData).GetHashCode();
@@ -218,14 +218,30 @@ namespace UnityEngine.AddressableAssets.ResourceLocators
             return new ResourceLocator(m_LocatorId, m_Reader, locatorCacheSize, providerSuffix);
         }
 
-        internal class Serializer : BinaryStorageBuffer.ISerializationAdapter<ContentCatalogData>
+        // f4 modify
+        internal partial class Serializer : BinaryStorageBuffer.ISerializationAdapter<ContentCatalogData>
+        // f4 modify
         {
-            public IEnumerable<BinaryStorageBuffer.ISerializationAdapter> Dependencies => new BinaryStorageBuffer.ISerializationAdapter[]
+            // f4 modify
+            public IEnumerable<BinaryStorageBuffer.ISerializationAdapter> Dependencies
             {
-                new ObjectInitializationData.Serializer(),
-                new AssetBundleRequestOptionsSerializationAdapter(),
-                new ResourceLocator.ResourceLocation.Serializer()
-            };
+                get
+                {
+                    var adapters = new List<BinaryStorageBuffer.ISerializationAdapter>
+                    {
+                        new ObjectInitializationData.Serializer(),
+                        new AssetBundleRequestOptionsSerializationAdapter(),
+                        new ResourceLocator.ResourceLocation.Serializer()
+                    };
+                    // f4 add 追加のシリアライズアダプタを登録するためのフック（実装はjp.f4samurai.addressables側）
+                    AddAdditionalAdapters(adapters);
+                    return adapters;
+                }
+            }
+            // f4 modify
+
+            // f4 add 実装が存在しない場合は呼び出しごと取り除かれる
+            static partial void AddAdditionalAdapters(List<BinaryStorageBuffer.ISerializationAdapter> adapters);
 
             public object Deserialize(BinaryStorageBuffer.Reader reader, Type t, uint offset)
             {
