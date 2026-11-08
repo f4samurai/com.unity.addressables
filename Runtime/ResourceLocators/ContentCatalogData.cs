@@ -956,8 +956,10 @@ namespace UnityEngine.AddressableAssets.ResourceLocators
                 public override int GetHashCode() => hashCode;
             }
             LRUCache<CacheKey, IList<IResourceLocation>> m_Cache;
-            Dictionary<object, uint> keyData;
-            BinaryStorageBuffer.Reader reader;
+            // f4 modify ダウンロード計算用の専用Readerから参照するためinternalにする
+            internal Dictionary<object, uint> keyData;
+            internal BinaryStorageBuffer.Reader reader;
+            // f4 modify 同上
             public string LocatorId { get; private set; }
             public IEnumerable<object> Keys => keyData.Keys;
 
@@ -979,7 +981,8 @@ namespace UnityEngine.AddressableAssets.ResourceLocators
                 }
             }
 
-            string providerSuffix;
+            // f4 modify 同上
+            internal string providerSuffix;
             internal ResourceLocator(string id, BinaryStorageBuffer.Reader reader, int cacheLimit, string providerSuffix)
             {
                 LocatorId = id;
