@@ -72,7 +72,7 @@ namespace UnityEngine.AddressableAssets.ResourceLocators
     /// Container for ContentCatalogEntries.
     /// </summary>
     [Serializable]
-    public class ContentCatalogData
+    public partial class ContentCatalogData
     {
         //used to verify that this is a valid catalog data file
         static int kMagic = nameof(ContentCatalogData).GetHashCode();
@@ -218,14 +218,30 @@ namespace UnityEngine.AddressableAssets.ResourceLocators
             return new ResourceLocator(m_LocatorId, m_Reader, locatorCacheSize, providerSuffix);
         }
 
-        internal class Serializer : BinaryStorageBuffer.ISerializationAdapter<ContentCatalogData>
+        // f4 modify
+        internal partial class Serializer : BinaryStorageBuffer.ISerializationAdapter<ContentCatalogData>
+        // f4 modify
         {
-            public IEnumerable<BinaryStorageBuffer.ISerializationAdapter> Dependencies => new BinaryStorageBuffer.ISerializationAdapter[]
+            // f4 modify
+            public IEnumerable<BinaryStorageBuffer.ISerializationAdapter> Dependencies
             {
-                new ObjectInitializationData.Serializer(),
-                new AssetBundleRequestOptionsSerializationAdapter(),
-                new ResourceLocator.ResourceLocation.Serializer()
-            };
+                get
+                {
+                    var adapters = new List<BinaryStorageBuffer.ISerializationAdapter>
+                    {
+                        new ObjectInitializationData.Serializer(),
+                        new AssetBundleRequestOptionsSerializationAdapter(),
+                        new ResourceLocator.ResourceLocation.Serializer()
+                    };
+                    // f4 add 追加のシリアライズアダプタを登録するためのフック（実装はjp.f4samurai.addressables側）
+                    AddAdditionalAdapters(adapters);
+                    return adapters;
+                }
+            }
+            // f4 modify
+
+            // f4 add 実装が存在しない場合は呼び出しごと取り除かれる
+            static partial void AddAdditionalAdapters(List<BinaryStorageBuffer.ISerializationAdapter> adapters);
 
             public object Deserialize(BinaryStorageBuffer.Reader reader, Type t, uint offset)
             {
@@ -940,8 +956,10 @@ namespace UnityEngine.AddressableAssets.ResourceLocators
                 public override int GetHashCode() => hashCode;
             }
             LRUCache<CacheKey, IList<IResourceLocation>> m_Cache;
-            Dictionary<object, uint> keyData;
-            BinaryStorageBuffer.Reader reader;
+            // f4 modify ダウンロード計算用の専用Readerから参照するためinternalにする
+            internal Dictionary<object, uint> keyData;
+            internal BinaryStorageBuffer.Reader reader;
+            // f4 modify 同上
             public string LocatorId { get; private set; }
             public IEnumerable<object> Keys => keyData.Keys;
 
@@ -963,7 +981,8 @@ namespace UnityEngine.AddressableAssets.ResourceLocators
                 }
             }
 
-            string providerSuffix;
+            // f4 modify 同上
+            internal string providerSuffix;
             internal ResourceLocator(string id, BinaryStorageBuffer.Reader reader, int cacheLimit, string providerSuffix)
             {
                 LocatorId = id;
