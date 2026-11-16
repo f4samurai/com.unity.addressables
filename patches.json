@@ -1,0 +1,96 @@
+[
+    {
+        "patchId": "partial-addressables",
+        "severity": "ERROR",
+        "description": "Addressables を partial 化",
+        "cards": [
+            "Runtime/Addressables/partial-addressables.cs"
+        ]
+    },
+    {
+        "patchId": "partial-addressables-impl",
+        "severity": "ERROR",
+        "description": "AddressablesImpl を partial 化",
+        "cards": [
+            "Runtime/AddressablesImpl/partial-addressables-impl.cs"
+        ]
+    },
+    {
+        "patchId": "partial-resource-manager",
+        "severity": "ERROR",
+        "description": "ResourceManager を partial 化",
+        "cards": [
+            "Runtime/ResourceManager/ResourceManager/partial-resource-manager.cs"
+        ]
+    },
+    {
+        "patchId": "catalog-serializer-hook",
+        "severity": "ERROR",
+        "description": "カタログ Serializer の Dependencies に追加アダプタのフックを入れる",
+        "cards": [
+            "Runtime/ResourceLocators/ContentCatalogData/catalog-serializer-hook.partial-content-catalog-data.cs",
+            "Runtime/ResourceLocators/ContentCatalogData/catalog-serializer-hook.partial-serializer.cs",
+            "Runtime/ResourceLocators/ContentCatalogData/catalog-serializer-hook.dependencies.cs"
+        ]
+    },
+    {
+        "patchId": "web-request-complete",
+        "severity": "ERROR",
+        "description": "OnWebRequestComplete の追加",
+        "cards": [
+            "Runtime/ResourceManager/ResourceManager/web-request-complete.cs",
+            "Runtime/AddressablesImpl/web-request-complete.cs",
+            "Runtime/Addressables/web-request-complete.cs",
+            "Runtime/ResourceManager/ResourceProviders/TextDataProvider/web-request-complete.cs"
+        ]
+    },
+    {
+        "patchId": "release-scene-options",
+        "severity": "ERROR",
+        "description": "UnloadSceneOptions 付き Release の追加（上流内部実装依存）",
+        "cards": [
+            "Runtime/AddressablesImpl/release-scene-options.release.cs",
+            "Runtime/AddressablesImpl/release-scene-options.auto-release.cs",
+            "Runtime/Addressables/release-scene-options.cs"
+        ]
+    },
+    {
+        "patchId": "internals-visible-to",
+        "severity": "ERROR",
+        "description": "InternalsVisibleTo の追記",
+        "cards": [
+            "Editor/AssemblyInfo/internals-visible-to.cs",
+            "Runtime/AssemblyInfo/internals-visible-to.cs",
+            "Runtime/ResourceManager/AssemblyInfo/internals-visible-to.cs"
+        ]
+    },
+    {
+        "patchId": "internal-locator-fields",
+        "severity": "ERROR",
+        "description": "ResourceLocator のフィールドを internal 化",
+        "cards": [
+            "Runtime/ResourceLocators/ContentCatalogData/internal-locator-fields.key-data.cs",
+            "Runtime/ResourceLocators/ContentCatalogData/internal-locator-fields.reader.cs",
+            "Runtime/ResourceLocators/ContentCatalogData/internal-locator-fields.provider-suffix.cs"
+        ]
+    },
+    {
+        "patchId": "missing-asset-label",
+        "severity": "WARN",
+        "description": "参照切れ AssetReference を Missing 表示（赤）にする",
+        "cards": [
+            "Editor/Settings/AssetReferenceDrawerUtilities/missing-asset-label.constants.cs",
+            "Editor/Settings/AssetReferenceDrawerUtilities/missing-asset-label.name-to-use.cs",
+            "Editor/Settings/AssetReferenceDrawerUtilities/missing-asset-label.construct-missing-label.cs",
+            "Editor/GUI/AssetReferenceDrawer/missing-asset-label.drawer-head.cs"
+        ]
+    },
+    {
+        "patchId": "sort-entries-by-guid",
+        "severity": "WARN",
+        "description": "シリアライズ時にエントリを guid 順に並べる",
+        "cards": [
+            "Editor/Settings/AddressableAssetGroup/sort-entries-by-guid.cs"
+        ]
+    }
+]
